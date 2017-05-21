@@ -137,11 +137,17 @@ def chatbot(net, sess, chars, vocab, max_length, beam_width, relevance, temperat
             initial_state=copy.deepcopy(states), initial_sample=vocab[' '],
             early_term_token=vocab['\n'], beam_width=beam_width, forward_model_fn=forward_with_mask,
             forward_args=(relevance, vocab['\n']), temperature=temperature)
+
+        # print ("Bot says: ")
+        sentence = "Bot says: "
         for i, char_token in enumerate(computer_response_generator):
-            print(chars[char_token], end='')
+            # print(chars[char_token], end='')
+            sentence = sentence + chars[char_token]
             states = forward_text(net, sess, states, vocab, chars[char_token])
             sys.stdout.flush()
-            if i >= max_length: break
+            if i >= max_length:
+                break
+        print (sentence)
         states = forward_text(net, sess, states, vocab, '\n> ')
 
 def process_user_command(user_input, states, relevance, temperature, beam_width):
